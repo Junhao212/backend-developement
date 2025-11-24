@@ -1,10 +1,328 @@
-* {
+/* ==================== CSS VARIABELEN ==================== */
+:root {
+    --color-primary: #000;
+    --color-secondary: #fff;
+    --color-accent: #e63946;
+    --color-text: #333;
+    --color-text-light: #666;
+    --color-border: #eee;
+    
+    --navbar-height: 90px;
+    --spacing-xs: 8px;
+    --spacing-sm: 16px;
+    --spacing-md: 24px;
+    --spacing-lg: 40px;
+    
+    --font-primary: system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+    --transition-speed: 0.3s;
+    
+    --z-navbar: 1000;
+    --z-overlay: 100;
+}
+
+/* ==================== RESET & BASE ==================== */
+*,
+*::before,
+*::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
-    background: #fff;
+    background: var(--color-secondary);
+    color: var(--color-text);
+    font-family: var(--font-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Verbeterde focus states voor toegankelijkheid */
+*:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* ==================== NAVBAR ==================== */
+.navbar {
+    width: 100%;
+    height: var(--navbar-height);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 var(--spacing-lg);
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: var(--color-secondary);
+    z-index: var(--z-navbar);
+    border-bottom: 1px solid var(--color-border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: box-shadow var(--transition-speed) ease;
+}
+
+.navbar:hover {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.nav-logo a {
+    font-size: clamp(22px, 4vw, 28px);
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: opacity var(--transition-speed) ease;
+}
+
+.nav-logo a:hover {
+    opacity: 0.7;
+}
+
+.nav-links {
+    display: flex;
+    gap: clamp(16px, 3vw, 28px);
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--color-primary);
+    font-size: clamp(12px, 1.5vw, 14px);
+    font-weight: 500;
+    opacity: 0.85;
+    transition: opacity var(--transition-speed) ease,
+                color var(--transition-speed) ease;
+    position: relative;
+    padding: 4px 0;
+}
+
+/* Hover effect met underline */
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--color-primary);
+    transition: width var(--transition-speed) ease;
+}
+
+.nav-links a:hover {
+    opacity: 1;
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+.nav-sale {
+    color: var(--color-accent) !important;
+    font-weight: 600;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.nav-sale::after {
+    background: var(--color-accent) !important;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.nav-icons {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+}
+
+.nav-icons .icon {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color var(--transition-speed) ease,
+                transform var(--transition-speed) ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-icons .icon:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    transform: scale(1.1);
+}
+
+.nav-icons .icon:active {
+    transform: scale(0.95);
+}
+
+/* ==================== HERO SECTION ==================== */
+.hero {
+    margin-top: var(--navbar-height);
+    width: 100%;
+    height: 85vh;
+    min-height: 500px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 8s ease;
+}
+
+/* Subtiele zoom effect op hover */
+.hero:hover .hero-img {
+    transform: scale(1.05);
+}
+
+.hero-button {
+    position: absolute;
+    bottom: var(--spacing-lg);
+    left: var(--spacing-lg);
+    background: rgba(0, 0, 0, 0.75);
+    color: var(--color-secondary);
+    padding: 14px 32px;
+    font-size: clamp(11px, 1.5vw, 13px);
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all var(--transition-speed) ease;
+    backdrop-filter: blur(10px);
+    display: inline-block;
+}
+
+.hero-button:hover {
+    background: var(--color-secondary);
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.hero-button:active {
+    transform: translateY(0);
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+
+/* Tablets en kleinere laptops */
+@media (max-width: 1024px) {
+    :root {
+        --navbar-height: 70px;
+        --spacing-lg: 24px;
+    }
+    
+    .nav-links {
+        gap: 16px;
+    }
+}
+
+/* Tablets portrait */
+@media (max-width: 768px) {
+    :root {
+        --navbar-height: 60px;
+        --spacing-lg: 16px;
+    }
+    
+    .navbar {
+        padding: 0 var(--spacing-md);
+    }
+    
+    .nav-links {
+        display: none; /* Implementeer een hamburger menu */
+    }
+    
+    .hero {
+        height: 70vh;
+    }
+    
+    .hero-button {
+        bottom: var(--spacing-md);
+        left: var(--spacing-md);
+        padding: 12px 24px;
+    }
+}
+
+/* Mobiel */
+@media (max-width: 480px) {
+    .navbar {
+        padding: 0 var(--spacing-sm);
+    }
+    
+    .nav-icons {
+        gap: 12px;
+    }
+    
+    .nav-icons .icon {
+        font-size: 18px;
+        padding: 6px;
+    }
+    
+    .hero {
+        height: 60vh;
+        min-height: 400px;
+    }
+    
+    .hero-button {
+        bottom: var(--spacing-sm);
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(100% - 32px);
+        text-align: center;
+    }
+    
+    .hero:hover .hero-button {
+        transform: translateX(-50%) translateY(-2px);
+    }
+}
+
+/* ==================== ANIMATIES & TOEGANKELIJKHEID ==================== */
+
+/* Respecteer reduced motion voorkeur */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Dark mode ondersteuning (optioneel) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-primary: #fff;
+        --color-secondary: #1a1a1a;
+        --color-text: #e0e0e0;
+        --color-border: #333;
+    }
+    
+    .navbar {
+        background: var(--color-secondary);
+    }
 }
