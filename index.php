@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- NAVBAR -->
+ 
     <header class="navbar">
         <div class="nav-logo">JW™</div>
         <nav class="nav-links">
@@ -29,16 +29,16 @@
         </div>
     </header>
 
-    <!-- HERO -->
+
     <section class="hero">
         <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8" alt="Black Friday Sale" class="hero-img">
         <button class="hero-button">SHOP BLACK FRIDAY</button>
     </section>
 
-    <!-- TITLE -->
+  
     <h2 class="section-title">SHOP SALE</h2>
 
-    <!-- PRODUCTS -->
+   
     <section class="products-grid">
         <article class="product-card">
             <span class="heart" role="button" aria-label="Toevoegen aan favorieten">🤍</span>

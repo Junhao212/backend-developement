@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- NAVBAR -->
+  
     <header class="navbar">
         <div class="nav-logo">
             <a href="index.html">JW™</a>
@@ -31,14 +31,14 @@
         </div>
     </header>
 
-    <!-- BREADCRUMB -->
+
     <div class="breadcrumb">
         <a href="index.html">Home</a> / 
         <a href="index.html#men">Men</a> / 
         <span>JW T-shirt Black</span>
     </div>
 
-    <!-- PRODUCT PAGE -->
+  
     <div class="product-page">
         <div class="product-gallery">
             <img src="img/prod1.jpg" alt="JW T-shirt Black" class="product-big" id="mainImage">
@@ -63,7 +63,7 @@
                 Perfect voor casual wear en een stijlvolle look.
             </p>
 
-            <!-- SIZE SELECTOR -->
+       
             <div class="size-selector">
                 <label>Maat:</label>
                 <div class="size-options">
@@ -76,7 +76,7 @@
                 </div>
             </div>
 
-            <!-- QUANTITY SELECTOR -->
+     
             <div class="quantity-selector">
                 <label>Aantal:</label>
                 <div class="quantity-controls">
@@ -86,13 +86,13 @@
                 </div>
             </div>
 
-            <!-- ACTION BUTTONS -->
+        
             <div class="product-actions">
                 <button class="buy-btn">TOEVOEGEN AAN WINKELWAGEN</button>
                 <button class="wishlist-btn">🤍 BEWAREN</button>
             </div>
 
-            <!-- PRODUCT DETAILS -->
+          
             <div class="product-details">
                 <details open>
                     <summary>Product Details</summary>
@@ -117,7 +117,7 @@
         </div>
     </div>
 
-    <!-- RELATED PRODUCTS -->
+  
     <section class="related-products">
         <h2 class="section-title">GERELATEERDE PRODUCTEN</h2>
         <div class="products-grid">
@@ -149,17 +149,17 @@
     </section>
 
     <script>
-        // Image gallery
+      
         function changeImage(thumbnail) {
             const mainImage = document.getElementById('mainImage');
             mainImage.src = thumbnail.src;
             
-            // Update active thumbnail
+           
             document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
             thumbnail.classList.add('active');
         }
 
-        // Size selector
+      
         document.querySelectorAll('.size-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
@@ -167,7 +167,7 @@
             });
         });
 
-        // Quantity controls
+      
         function increaseQty() {
             const qtyInput = document.getElementById('quantity');
             if (qtyInput.value < 10) {
