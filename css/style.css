@@ -10,7 +10,7 @@ body {
     line-height: 1.6;
 }
 
-
+/* NAVBAR */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -67,8 +67,9 @@ body {
     font-weight: 700;
 }
 
-.nav-icons {
+.nav-auth {
     display: flex;
+    align-items: center;
     gap: 1.5rem;
 }
 
@@ -80,6 +81,39 @@ body {
 
 .icon:hover {
     transform: scale(1.15);
+}
+
+.auth-btn {
+    padding: 0.6rem 1.5rem;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.Login-btn {
+    color: #333;
+    border: 2px solid #333;
+    background: transparent;
+}
+
+.Login-btn:hover {
+    background: #333;
+    color: #fff;
+}
+
+.Register-btn {
+    background: #333;
+    color: #fff;
+    border: 2px solid #333;
+}
+
+.Register-btn:hover {
+    background: #000;
+    border-color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
 
@@ -120,7 +154,7 @@ body {
     transform: scale(1.05);
 }
 
-
+/* TITLE */
 .section-title {
     text-align: center;
     font-size: 2.5rem;
@@ -198,7 +232,7 @@ body {
     margin-left: 0.5rem;
 }
 
-/* PRODUCT PAGE */
+
 .breadcrumb {
     padding: 1rem 3rem;
     font-size: 0.9rem;
@@ -452,50 +486,4 @@ body {
 .product-card a {
     text-decoration: none;
     color: inherit;
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-    .navbar {
-        flex-direction: column;
-        gap: 1rem;
-        padding: 1rem;
-    }
-
-    .nav-links {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 1rem;
-    }
-
-    .hero {
-        height: 50vh;
-    }
-
-    .section-title {
-        font-size: 2rem;
-    }
-
-    .products-grid {
-        padding: 1rem;
-        gap: 1.5rem;
-    }
-
-    .product-page {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-        padding: 1rem;
-    }
-
-    .product-big {
-        height: 400px;
-    }
-
-    .product-info h1 {
-        font-size: 2rem;
-    }
-
-    .breadcrumb {
-        padding: 1rem;
-    }
 }

@@ -11,7 +11,7 @@
   
     <header class="navbar">
         <div class="nav-logo">
-            <a href="index.html">JW™</a>
+            <a href="index.php">JW™</a>
         </div>
         <nav class="nav-links">
             <a href="index.html#new">NEW IN</a>
