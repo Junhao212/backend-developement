@@ -49,4 +49,41 @@ class Product
             ':image' => $this->image
         ]);
     }
+
+    public static function findById(int $id): ?array
+    {
+        $conn = Db::getConnection();
+        $stmt = $conn->prepare("SELECT * FROM products WHERE id = :id");
+        $stmt->bindValue(":id", $id);
+        $stmt->execute();
+        $product = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $product ?: null;
+    }
+
+    public function update(int $id): bool
+    {
+        $conn = Db::getConnection();
+        $stmt = $conn->prepare("
+            UPDATE products 
+            SET title = :title, price = :price, category = :category, image = :image
+            WHERE id = :id
+        ");
+
+        return $stmt->execute([
+            ':title' => $this->title,
+            ':price' => $this->price,
+            ':category' => $this->category,
+            ':image' => $this->image,
+            ':id' => $id
+        ]);
+    }
+
+    public static function delete(int $id): bool
+    {
+        $conn = Db::getConnection();
+        $stmt = $conn->prepare("DELETE FROM products WHERE id = :id");
+        return $stmt->execute([':id' => $id]);
+    }
 }
+
