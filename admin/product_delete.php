@@ -16,6 +16,6 @@ $id = (int)$_GET['id'];
 
 Product::delete($id);
 
-// terug naar overzicht
+
 header("Location: products.php");
 exit;
