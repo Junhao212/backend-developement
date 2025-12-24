@@ -6,7 +6,6 @@ class User
     private string $email;
     private string $password;
 
-    // EMAIL SETTER
     public function setEmail(string $email): void
     {
         $email = trim($email);
@@ -18,18 +17,18 @@ class User
         $this->email = $email;
     }
 
-    // PASSWORD SETTER
+
     public function setPassword(string $password): void
     {
         if (strlen($password) < 4) {
             throw new Exception("Wachtwoord te kort");
         }
 
-        // hashing
+     
         $this->password = password_hash($password, PASSWORD_DEFAULT);
     }
 
-    // CHECKT OF EMAIL BESTAAT
+ 
     public function emailExists(): bool
     {
         $conn = Db::getConnection();
@@ -39,7 +38,7 @@ class User
         return $stmt->rowCount() > 0;
     }
 
-    // MAAKT NIEUWE USER
+  
     public function save(): bool
     {
         $conn = Db::getConnection();
@@ -50,7 +49,6 @@ class User
         ]);
     }
 
-    // LOGIN FUNCTIE
     public function login(string $email, string $password): bool
     {
         $conn = Db::getConnection();
@@ -60,10 +58,9 @@ class User
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$user) {
-            return false; // email niet gevonden
+            return false; 
         }
 
-        // wachtwoord check
         if (password_verify($password, $user['password'])) {
             session_start();
             $_SESSION['user_id'] = $user['id'];

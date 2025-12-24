@@ -28,20 +28,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $product->setPrice((float)$_POST['price']);
         $product->setCategory($_POST['category']);
 
-        // nieuwe afbeelding?
+      
         if (!empty($_FILES['image']['name'])) {
             $filename = time() . "_" . $_FILES['image']['name'];
             $destination = "../uploads/" . $filename;
             move_uploaded_file($_FILES['image']['tmp_name'], $destination);
             $product->setImage($filename);
         } else {
-            // oude afbeelding behouden
+           
             $product->setImage($productData['image']);
         }
 
         $product->update($id);
         $message = "Product succesvol aangepast!";
-        $productData = Product::findById($id); // refresh data
+        $productData = Product::findById($id);
     } catch (Exception $e) {
         $message = $e->getMessage();
     }

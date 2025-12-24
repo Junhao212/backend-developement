@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $product->setPrice((float)$_POST['price']);
         $product->setCategory($_POST['category']);
 
-        // afbeelding upload
+     
         if (!empty($_FILES['image']['name'])) {
             $filename = time() . "_" . $_FILES['image']['name'];
             $destination = "../uploads/" . $filename;

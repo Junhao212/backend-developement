@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if ($user->login($email, $password)) {
 
-        // redirect per rol
+     
         if ($_SESSION['role'] === 'admin') {
             header("Location: ../admin/products.php");
             exit;
