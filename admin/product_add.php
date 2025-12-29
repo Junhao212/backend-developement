@@ -10,22 +10,42 @@ require_once __DIR__ . '/../classes/Product.php';
 
 $message = "";
 
+function safeUploadImage(array $file): string
+{
+    if (empty($file['name'])) {
+        throw new Exception("Afbeelding verplicht");
+    }
+
+    if (!is_uploaded_file($file['tmp_name'])) {
+        throw new Exception("Upload mislukt");
+    }
+
+    $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+
+    if (!in_array($ext, $allowed, true)) {
+        throw new Exception("Alleen JPG, PNG of WEBP toegelaten");
+    }
+
+    $filename = time() . "_" . bin2hex(random_bytes(4)) . "." . $ext;
+    $destination = __DIR__ . "/../uploads/" . $filename;
+
+    if (!move_uploaded_file($file['tmp_name'], $destination)) {
+        throw new Exception("Kon afbeelding niet opslaan");
+    }
+
+    return $filename;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $product = new Product();
         $product->setTitle($_POST['title']);
         $product->setPrice((float)$_POST['price']);
-        $product->setCategory($_POST['category']);
+        $product->setCategory($_POST['category'] ?? '');
 
-     
-        if (!empty($_FILES['image']['name'])) {
-            $filename = time() . "_" . $_FILES['image']['name'];
-            $destination = "../uploads/" . $filename;
-            move_uploaded_file($_FILES['image']['tmp_name'], $destination);
-            $product->setImage($filename);
-        } else {
-            throw new Exception("Afbeelding verplicht");
-        }
+        $filename = safeUploadImage($_FILES['image']);
+        $product->setImage($filename);
 
         $product->add();
         $message = "Product succesvol toegevoegd!";

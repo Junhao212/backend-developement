@@ -1,18 +1,34 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Register | JW Shop</title>
-    <link rel="stylesheet" href="../css/style.css">
-</head>
-<body>
+<?php
+require_once __DIR__ . '/../classes/User.php';
 
-<form class="auth-box">
-    <h2>Register</h2>
-    <input type="email" placeholder="E-mail">
-    <input type="password" placeholder="Wachtwoord">
-    <input type="password" placeholder="Herhaal wachtwoord">
-    <button>Maak account aan</button>
+$message = "";
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    try {
+        $user = new User();
+        $user->setEmail($_POST['email']);
+        $user->setPassword($_POST['password']);
+
+        if ($user->emailExists()) {
+            $message = "Dit e-mailadres bestaat al";
+        } else {
+            $user->save();
+            $message = "Account aangemaakt! Je kan nu inloggen.";
+        }
+    } catch (Exception $e) {
+        $message = $e->getMessage();
+    }
+}
+?>
+
+<h2>Registreren</h2>
+
+<?php if ($message): ?>
+    <p><?= htmlspecialchars($message) ?></p>
+<?php endif; ?>
+
+<form method="POST">
+    <input type="email" name="email" placeholder="E-mail" required>
+    <input type="password" name="password" placeholder="Wachtwoord" required>
+    <button type="submit">Registreren</button>
 </form>
-
-</body>
-</html>

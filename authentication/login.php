@@ -4,9 +4,9 @@ require_once __DIR__ . '/../classes/User.php';
 
 $message = "";
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = $_POST['email'] ?? '';
+    $password = $_POST['password'] ?? '';
 
     $user = new User();
 
@@ -15,24 +15,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
      
         if ($_SESSION['role'] === 'admin') {
             header("Location: ../admin/products.php");
-            exit;
         } else {
             header("Location: ../index.php");
-            exit;
         }
+        exit;
     } else {
-        $message = "Ongeldige logingegevens";
+        $message = "Ongeldig e-mailadres of wachtwoord";
     }
 }
 ?>
 
+<h2>Login</h2>
+
+<?php if ($message): ?>
+    <p><?= htmlspecialchars($message) ?></p>
+<?php endif; ?>
+
 <form method="POST">
-    <h2>Login</h2>
-
-    <?php if($message): ?>
-        <p><?= $message ?></p>
-    <?php endif; ?>
-
     <input type="email" name="email" placeholder="E-mail" required>
     <input type="password" name="password" placeholder="Wachtwoord" required>
     <button type="submit">Inloggen</button>

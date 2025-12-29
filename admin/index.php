@@ -24,8 +24,9 @@
             <span class="icon" role="button" aria-label="Zoeken">🔍</span>
             <span class="icon" role="button" aria-label="Favorieten">🤍</span>
             <span class="icon" role="button" aria-label="Winkelwagen">🛒</span>
-            <a href="login.php" class="auth-btn Login-btn">Login</a>
-            <a href="register.php" class="auth-btn Register-btn">Register</a>
+            <a href="auth/login.php" class="auth-btn Login-btn">Login</a>
+<a href="auth/register.php" class="auth-btn Register-btn">Register</a>
+
         </div>
     </header>
 
