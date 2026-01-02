@@ -49,29 +49,22 @@ class Product
             ':image' => $this->image
         ]);
     }
+
     public static function getAll(): array
     {
         $conn = Db::getConnection();
-        $stmt = $conn->prepare("
-            SELECT * 
-            FROM products 
-            ORDER BY created_at DESC
-        ");
+        $stmt = $conn->prepare("SELECT * FROM products ORDER BY created_at DESC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
     public static function findById(int $id): ?array
     {
         $conn = Db::getConnection();
-        $stmt = $conn->prepare("
-            SELECT * 
-            FROM products 
-            WHERE id = :id
-        ");
+        $stmt = $conn->prepare("SELECT * FROM products WHERE id = :id");
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);
         $stmt->execute();
         $product = $stmt->fetch(PDO::FETCH_ASSOC);
-
         return $product ?: null;
     }
 
@@ -80,10 +73,7 @@ class Product
         $conn = Db::getConnection();
         $stmt = $conn->prepare("
             UPDATE products
-            SET title = :title,
-                price = :price,
-                category = :category,
-                image = :image
+            SET title = :title, price = :price, category = :category, image = :image
             WHERE id = :id
         ");
 
@@ -95,13 +85,11 @@ class Product
             ':id' => $id
         ]);
     }
+
     public static function delete(int $id): bool
     {
         $conn = Db::getConnection();
-        $stmt = $conn->prepare("
-            DELETE FROM products 
-            WHERE id = :id
-        ");
+        $stmt = $conn->prepare("DELETE FROM products WHERE id = :id");
         return $stmt->execute([':id' => $id]);
     }
 }

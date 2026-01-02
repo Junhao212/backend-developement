@@ -3,54 +3,67 @@ require_once __DIR__ . '/../config/Db.php';
 
 class Order
 {
-    private int $userId;
-    private int $productId;
-    private float $price;
-
-    public function setUserId(int $userId): void
-    {
-        $this->userId = $userId;
-    }
-
-    public function setProductId(int $productId): void
-    {
-        $this->productId = $productId;
-    }
-
-    public function setPrice(float $price): void
-    {
-        $this->price = $price;
-    }
-
- 
-    public function save(): bool
+    public static function purchase(int $userId, int $productId): array
     {
         $conn = Db::getConnection();
 
-        $stmt = $conn->prepare("
-            INSERT INTO orders (user_id, product_id, price)
-            VALUES (:user_id, :product_id, :price)
-        ");
-
-        return $stmt->execute([
-            ':user_id' => $this->userId,
-            ':product_id' => $this->productId,
-            ':price' => $this->price
-        ]);
-    }
-
-  
-    public static function getByUser(int $userId): array
-    {
-        $conn = Db::getConnection();
-        $stmt = $conn->prepare("
-            SELECT * FROM orders 
-            WHERE user_id = :user_id 
-            ORDER BY created_at DESC
-        ");
-        $stmt->bindValue(':user_id', $userId);
+        // product ophalen
+        $stmt = $conn->prepare("SELECT id, title, price FROM products WHERE id = :id");
+        $stmt->bindValue(":id", $productId, PDO::PARAM_INT);
         $stmt->execute();
+        $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if (!$product) {
+            return ['success' => false, 'message' => 'Product niet gevonden.'];
+        }
+
+        // user ophalen
+        $stmt = $conn->prepare("SELECT id, currency FROM users WHERE id = :id");
+        $stmt->bindValue(":id", $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$user) {
+            return ['success' => false, 'message' => 'User niet gevonden.'];
+        }
+
+        $priceCoins = (int)round((float)$product['price']);
+        $currentCoins = (int)$user['currency'];
+
+        if ($currentCoins < $priceCoins) {
+            return ['success' => false, 'message' => 'Niet genoeg currency.'];
+        }
+
+        // transactie: coins verminderen + order opslaan
+        $conn->beginTransaction();
+        try {
+            $newCoins = $currentCoins - $priceCoins;
+
+            $stmt = $conn->prepare("UPDATE users SET currency = :c WHERE id = :id");
+            $stmt->execute([':c' => $newCoins, ':id' => $userId]);
+
+            $stmt = $conn->prepare("
+                INSERT INTO orders (user_id, product_id, price)
+                VALUES (:user_id, :product_id, :price)
+            ");
+            $stmt->execute([
+                ':user_id' => $userId,
+                ':product_id' => $productId,
+                ':price' => $priceCoins
+            ]);
+
+            $conn->commit();
+
+            return [
+                'success' => true,
+                'message' => 'Aankoop gelukt!',
+                'new_currency' => $newCoins,
+                'product_title' => $product['title'],
+                'price' => $priceCoins
+            ];
+        } catch (Exception $e) {
+            $conn->rollBack();
+            return ['success' => false, 'message' => 'Fout bij aankoop.'];
+        }
     }
 }
