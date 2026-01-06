@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../config/Db.php';
+require_once __DIR__ . '/../config/db.php';
 
 class User
 {
@@ -8,45 +8,38 @@ class User
 
     public function setEmail(string $email): void
     {
-        $email = trim($email);
-
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             throw new Exception("Ongeldig e-mailadres");
         }
-
-        $this->email = $email;
+        $this->email = strtolower(trim($email));
     }
 
     public function setPassword(string $password): void
     {
         if (strlen($password) < 4) {
-            throw new Exception("Wachtwoord te kort");
+            throw new Exception("Wachtwoord moet minstens 4 tekens zijn");
         }
-
         $this->password = password_hash($password, PASSWORD_DEFAULT);
     }
-
-    public function emailExists(): bool
+    
+    public function register(): bool
     {
         $conn = Db::getConnection();
         $stmt = $conn->prepare("SELECT id FROM users WHERE email = :email");
-        $stmt->bindValue(":email", $this->email);
-        $stmt->execute();
-        return $stmt->rowCount() > 0;
-    }
+        $stmt->execute([':email' => $this->email]);
 
-    public function save(string $role = 'user'): bool
-    {
-        $conn = Db::getConnection();
+        if ($stmt->fetch()) {
+            throw new Exception("E-mailadres bestaat al");
+        }
+
         $stmt = $conn->prepare("
             INSERT INTO users (email, password, role, currency)
-            VALUES (:email, :password, :role, 100)
+            VALUES (:email, :password, 'user', 100)
         ");
 
         return $stmt->execute([
-            ":email" => $this->email,
-            ":password" => $this->password,
-            ":role" => $role
+            ':email' => $this->email,
+            ':password' => $this->password
         ]);
     }
 
@@ -54,31 +47,19 @@ class User
     {
         $conn = Db::getConnection();
         $stmt = $conn->prepare("SELECT * FROM users WHERE email = :email");
-        $stmt->bindValue(":email", $email);
-        $stmt->execute();
+        $stmt->execute([':email' => strtolower(trim($email))]);
+
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!$user) {
+        if (!$user || !password_verify($password, $user['password'])) {
             return false;
         }
 
-        if (password_verify($password, $user['password'])) {
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['email'] = $user['email'];
-            $_SESSION['role'] = $user['role'];
-            $_SESSION['currency'] = (int)$user['currency'];
-            return true;
-        }
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['email'] = $user['email'];
+        $_SESSION['role'] = $user['role'];
+        $_SESSION['currency'] = $user['currency'];
 
-        return false;
-    }
-
-    public static function existsByEmail(string $email): bool
-    {
-        $conn = Db::getConnection();
-        $stmt = $conn->prepare("SELECT id FROM users WHERE email = :email");
-        $stmt->bindValue(":email", $email);
-        $stmt->execute();
-        return $stmt->rowCount() > 0;
+        return true;
     }
 }

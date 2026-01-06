@@ -4,115 +4,80 @@ session_start();
 require_once __DIR__ . '/../classes/Product.php';
 require_once __DIR__ . '/../classes/Comment.php';
 
-if (!isset($_GET['id'])) {
-    die("Geen product gekozen");
+$productId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+if ($productId <= 0) {
+    echo "Ongeldig product id.";
+    exit;
 }
 
-$id = (int)$_GET['id'];
-$product = Product::findById($id);
-
+$product = Product::findById($productId);
 if (!$product) {
-    die("Product niet gevonden");
+    echo "Product niet gevonden.";
+    exit;
 }
 
-$comments = Comment::getByProduct($id);
+$comments = Comment::getByProduct($productId);
 
-$successMsg = $_GET['success'] ?? '';
-$errorMsg = $_GET['error'] ?? '';
+$isLoggedIn = isset($_SESSION['user_id']);
 ?>
 <!DOCTYPE html>
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
     <title><?= htmlspecialchars($product['title']) ?> | JW Shop</title>
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
 
-<p><a href="../index.php">← Terug naar shop</a></p>
-
-<?php if ($successMsg): ?>
-    <p><?= htmlspecialchars($successMsg) ?></p>
-<?php endif; ?>
-
-<?php if ($errorMsg): ?>
-    <p><?= htmlspecialchars($errorMsg) ?></p>
-<?php endif; ?>
+<a href="../index.php">← Terug naar overzicht</a>
 
 <h1><?= htmlspecialchars($product['title']) ?></h1>
+<p><strong>Prijs:</strong> €<?= number_format((float)$product['price'], 2, ',', '.') ?></p>
+<p><strong>Categorie:</strong> <?= htmlspecialchars($product['category'] ?? '-') ?></p>
 
 <?php if (!empty($product['image'])): ?>
-    <img src="../uploads/<?= htmlspecialchars($product['image']) ?>" width="250" alt="">
+    <img src="../uploads/<?= htmlspecialchars($product['image']) ?>" alt="product" style="max-width:250px;">
 <?php endif; ?>
 
-<p>Prijs: <strong><?= number_format((float)$product['price'], 2, ',', '.') ?></strong> coins</p>
-<p>Categorie: <?= htmlspecialchars($product['category']) ?></p>
+<hr>
 
-<?php if (isset($_SESSION['user_id'])): ?>
-    <p>Jouw coins: <strong><?= (int)($_SESSION['currency'] ?? 0) ?></strong></p>
-
-    <form method="POST" action="buy.php">
+<?php if ($isLoggedIn): ?>
+    <form action="buy.php" method="POST">
         <input type="hidden" name="product_id" value="<?= (int)$product['id'] ?>">
-        <button type="submit">Koop dit product</button>
+        <button type="submit">Koop</button>
     </form>
 <?php else: ?>
-    <p><a href="../auth/login.php">Log in</a> om te kopen.</p>
+    <p>Je moet eerst <a href="../authentication/login.php">inloggen</a> om te kopen.</p>
 <?php endif; ?>
 
 <hr>
 
 <h2>Comments</h2>
 
-<div id="commentsList">
+<?php if (count($comments) === 0): ?>
+    <p>Nog geen comments.</p>
+<?php else: ?>
     <?php foreach ($comments as $c): ?>
         <div style="border:1px solid #ddd; padding:10px; margin-bottom:10px;">
-            <strong>Rating: <?= (int)$c['rating'] ?>/5</strong><br>
-            <?= htmlspecialchars($c['comment']) ?><br>
+            <p><strong>Rating:</strong> <?= (int)$c['rating'] ?>/5</p>
+            <p><?= nl2br(htmlspecialchars($c['comment'])) ?></p>
             <small><?= htmlspecialchars($c['created_at']) ?></small>
         </div>
     <?php endforeach; ?>
-</div>
+<?php endif; ?>
 
-<?php if (isset($_SESSION['user_id'])): ?>
-    <h3>Laat een comment achter (AJAX)</h3>
-
-    <form id="commentForm">
+<?php if ($isLoggedIn): ?>
+    <h3>Schrijf een comment</h3>
+    <form action="../comments/add_comment.php" method="POST">
         <input type="hidden" name="product_id" value="<?= (int)$product['id'] ?>">
-        <textarea name="comment" id="comment" placeholder="Schrijf je comment..." required></textarea><br><br>
 
-        <select name="rating" id="rating" required>
-            <option value="">Rating</option>
-            <option value="1">1/5</option>
-            <option value="2">2/5</option>
-            <option value="3">3/5</option>
-            <option value="4">4/5</option>
-            <option value="5">5/5</option>
-        </select>
+        <textarea name="comment" rows="4" placeholder="Jouw comment..." required></textarea><br><br>
 
-        <button type="submit">Verstuur</button>
+        <label>Rating (1-5)</label>
+        <input type="number" name="rating" min="1" max="5" required><br><br>
+
+        <button type="submit">Plaats comment</button>
     </form>
-
-    <script>
-    document.getElementById("commentForm").addEventListener("submit", async function(e){
-        e.preventDefault();
-
-        const formData = new FormData(this);
-
-        const res = await fetch("../comments/add_comment.php", {
-            method: "POST",
-            body: formData
-        });
-
-        const data = await res.json();
-        alert(data.message);
-
-        if (data.success) {
-            location.reload(); 
-        }
-    });
-    </script>
-<?php else: ?>
-    <p><a href="../auth/login.php">Log in</a> om te commenten.</p>
 <?php endif; ?>
 
 </body>

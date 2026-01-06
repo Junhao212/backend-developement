@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../config/Db.php';
+require_once __DIR__ . '/../config/db.php';
 
 class Order
 {
@@ -7,40 +7,41 @@ class Order
     {
         $conn = Db::getConnection();
 
-        // product ophalen
-        $stmt = $conn->prepare("SELECT id, title, price FROM products WHERE id = :id");
-        $stmt->bindValue(":id", $productId, PDO::PARAM_INT);
-        $stmt->execute();
+        // 1) product ophalen
+        $stmt = $conn->prepare("SELECT id, price FROM products WHERE id = :id");
+        $stmt->execute([':id' => $productId]);
         $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$product) {
-            return ['success' => false, 'message' => 'Product niet gevonden.'];
+            return ['success' => false, 'message' => 'Product niet gevonden'];
         }
 
-        // user ophalen
-        $stmt = $conn->prepare("SELECT id, currency FROM users WHERE id = :id");
-        $stmt->bindValue(":id", $userId, PDO::PARAM_INT);
-        $stmt->execute();
+        $price = (int) round((float)$product['price']); // coins als int
+
+        // 2) user coins ophalen
+        $stmt = $conn->prepare("SELECT currency FROM users WHERE id = :id");
+        $stmt->execute([':id' => $userId]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$user) {
-            return ['success' => false, 'message' => 'User niet gevonden.'];
+            return ['success' => false, 'message' => 'User niet gevonden'];
         }
 
-        $priceCoins = (int)round((float)$product['price']);
-        $currentCoins = (int)$user['currency'];
+        $coins = (int)$user['currency'];
 
-        if ($currentCoins < $priceCoins) {
-            return ['success' => false, 'message' => 'Niet genoeg currency.'];
+        if ($coins < $price) {
+            return ['success' => false, 'message' => 'Niet genoeg coins'];
         }
 
-        // transactie: coins verminderen + order opslaan
-        $conn->beginTransaction();
+        // 3) transaction: coins verminderen + order toevoegen
         try {
-            $newCoins = $currentCoins - $priceCoins;
+            $conn->beginTransaction();
 
-            $stmt = $conn->prepare("UPDATE users SET currency = :c WHERE id = :id");
-            $stmt->execute([':c' => $newCoins, ':id' => $userId]);
+            $stmt = $conn->prepare("UPDATE users SET currency = currency - :price WHERE id = :id");
+            $stmt->execute([
+                ':price' => $price,
+                ':id' => $userId
+            ]);
 
             $stmt = $conn->prepare("
                 INSERT INTO orders (user_id, product_id, price)
@@ -49,21 +50,15 @@ class Order
             $stmt->execute([
                 ':user_id' => $userId,
                 ':product_id' => $productId,
-                ':price' => $priceCoins
+                ':price' => $price
             ]);
 
             $conn->commit();
 
-            return [
-                'success' => true,
-                'message' => 'Aankoop gelukt!',
-                'new_currency' => $newCoins,
-                'product_title' => $product['title'],
-                'price' => $priceCoins
-            ];
+            return ['success' => true, 'message' => 'Aankoop gelukt!'];
         } catch (Exception $e) {
             $conn->rollBack();
-            return ['success' => false, 'message' => 'Fout bij aankoop.'];
+            return ['success' => false, 'message' => 'Order fout: ' . $e->getMessage()];
         }
     }
 }
