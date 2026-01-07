@@ -4,13 +4,11 @@ require_once __DIR__ . '/../classes/User.php';
 
 $message = "";
 
-// ✅ Next URL support (voor "wachtwoord wijzigen" flow)
 $next = $_GET['next'] ?? '';
 if (!is_string($next)) {
     $next = '';
 }
 
-// ✅ Veiligheid: laat enkel interne/relatieve paden toe (geen externe redirects)
 if (
     $next === '' ||
     str_contains($next, '://') ||
@@ -34,13 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['role'] = $user['role'];
             $_SESSION['currency'] = (int)$user['currency'];
 
-            // ✅ Als gebruiker via "wachtwoord wijzigen" kwam, ga daarnaar
             if ($next !== '' && str_starts_with($next, '../account/')) {
                 header("Location: " . $next);
                 exit;
             }
 
-            // ✅ Jouw bestaande flow behouden
             if ($_SESSION['role'] === 'admin') {
                 header("Location: ../admin/products.php");
             } else {
@@ -78,7 +74,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <p>Geen account? <a href="register.php">Register</a></p>
 
-<!-- ✅ Wachtwoord wijzigen: werkt altijd (eerst login, daarna naar formulier) -->
 <p>
     Wachtwoord wijzigen?
     <a href="login.php?next=../account/change_password.php">Klik hier</a>

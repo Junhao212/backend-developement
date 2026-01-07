@@ -36,7 +36,7 @@ class User
         $conn = Db::getConnection();
         $stmt = $conn->prepare("
             INSERT INTO users (email, password, role, currency)
-            VALUES (:email, :password, :role, 100)
+            VALUES (:email, :password, :role, 500)
         ");
         return $stmt->execute([
             ":email" => $this->email,
@@ -55,7 +55,37 @@ class User
         if (!$user) return null;
         if (!password_verify($password, $user['password'])) return null;
 
+        // ✅ DEMO / TEST: altijd genoeg coins om te testen
+        $minCoins = 500;
+        if ((int)$user['currency'] < $minCoins) {
+            $stmt2 = $conn->prepare("UPDATE users SET currency = :c WHERE id = :id");
+            $stmt2->execute([
+                ":c" => $minCoins,
+                ":id" => (int)$user['id']
+            ]);
+            $user['currency'] = $minCoins;
+        }
+
         return $user;
+    }
+
+    public static function findById(int $id): ?array
+    {
+        $conn = Db::getConnection();
+        $stmt = $conn->prepare("SELECT * FROM users WHERE id = :id");
+        $stmt->execute([":id" => $id]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $user ?: null;
+    }
+
+    public static function updateCurrency(int $userId, int $newCurrency): void
+    {
+        $conn = Db::getConnection();
+        $stmt = $conn->prepare("UPDATE users SET currency = :c WHERE id = :id");
+        $stmt->execute([
+            ":c" => $newCurrency,
+            ":id" => $userId
+        ]);
     }
 
     public static function changePassword(int $userId, string $oldPassword, string $newPassword): void
