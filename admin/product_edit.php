@@ -24,7 +24,7 @@ $message = "";
 function safeUploadImageOptional(array $file, string $current): string
 {
     if (empty($file['name'])) {
-        return $current; // niks geupload, oude behouden
+        return $current;
     }
 
     if (!is_uploaded_file($file['tmp_name'])) {
@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $product->update($id);
         $message = "Product succesvol aangepast!";
 
-        $productData = Product::findById($id); // refresh
+        $productData = Product::findById($id); 
     } catch (Exception $e) {
         $message = $e->getMessage();
     }
@@ -87,3 +87,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <input type="file" name="image"><br><br>
     <button type="submit">Opslaan</button>
 </form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    
+</body>
+</html>

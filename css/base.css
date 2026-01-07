@@ -1,0 +1,263 @@
+* { 
+  box-sizing: border-box; 
+}
+
+html, body { 
+  margin: 0; 
+  padding: 0; 
+}
+
+body {
+  font-family: Arial, sans-serif;
+  color: #333;
+  background: #f5f5f5;
+}
+
+/* Navbar */
+.nav {
+  background: #fff;
+  border-bottom: 2px solid #ddd;
+  padding: 15px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Brand/Logo - links */
+.brand {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.brand a {
+  text-decoration: none;
+  color: #222;
+}
+
+.brand a:hover {
+  color: #555;
+}
+
+/* Nav rechts - badge, links */
+.nav .container > div:last-child {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #333;
+  font-size: 15px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.nav a:hover {
+  background: #f0f0f0;
+}
+
+.badge {
+  background: #333;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 15px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px 20px;
+}
+
+/* Notice/Flash messages */
+.notice {
+  padding: 15px 20px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  background: #fff;
+  border: 1px solid #ddd;
+}
+
+.notice.ok {
+  background: #d4edda;
+  border-color: #c3e6cb;
+  color: #155724;
+}
+
+/* Card (filter form) */
+.card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 30px;
+}
+
+.card form {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  align-items: end;
+}
+
+.card label {
+  font-weight: bold;
+  font-size: 14px;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.card select,
+.card input[type="text"] {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  min-width: 180px;
+}
+
+.card select:focus,
+.card input[type="text"]:focus {
+  outline: none;
+  border-color: #333;
+}
+
+/* Buttons */
+.btn {
+  padding: 9px 16px;
+  background: #333;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.2s;
+}
+
+.btn:hover {
+  background: #555;
+}
+
+/* Heading */
+h2 {
+  font-size: 28px;
+  font-weight: bold;
+  color: #222;
+  margin: 0 0 25px 0;
+}
+
+/* Product grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+}
+
+/* Product card */
+.product {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.product:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.product h3 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: bold;
+  color: #222;
+}
+
+.product .meta {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+.product .price {
+  font-size: 20px;
+  font-weight: bold;
+  color: #222;
+  margin: 12px 0;
+}
+
+.product a {
+  display: inline-block;
+  margin-top: 10px;
+  color: #333;
+  text-decoration: underline;
+  font-size: 14px;
+}
+
+.product a:hover {
+  color: #000;
+}
+
+.product form {
+  margin-top: 8px;
+}
+
+.product form .btn {
+  width: 100%;
+}
+
+/* Empty state */
+.notice:not(.ok) {
+  text-align: center;
+  padding: 60px 30px;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  color: #666;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav .container {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  
+  .nav .container > div:last-child {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+  
+  .card form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .card select,
+  .card input[type="text"] {
+    width: 100%;
+  }
+  
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+  }
+}

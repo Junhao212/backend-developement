@@ -1,17 +1,16 @@
 <?php
 session_start();
-
 header('Content-Type: application/json');
+
+require_once __DIR__ . '/../classes/Comment.php';
 
 if (!isset($_SESSION['user_id'])) {
     echo json_encode([
         'success' => false,
-        'message' => 'Je moet ingelogd zijn om een comment te plaatsen.'
+        'message' => 'Je moet ingelogd zijn.'
     ]);
     exit;
 }
-
-require_once __DIR__ . '/../classes/Comment.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode([
@@ -22,13 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $productId = isset($_POST['product_id']) ? (int)$_POST['product_id'] : 0;
-$commentText = $_POST['comment'] ?? '';
+$commentText = trim($_POST['comment'] ?? '');
 $rating = isset($_POST['rating']) ? (int)$_POST['rating'] : 0;
 
 if ($productId <= 0) {
     echo json_encode([
         'success' => false,
-        'message' => 'Ongeldig product.'
+        'message' => 'Ongeldig product id.'
     ]);
     exit;
 }
@@ -40,7 +39,7 @@ try {
     $comment->setComment($commentText);
     $comment->setRating($rating);
 
-    $comment->save();
+    $comment->add();
 
     echo json_encode([
         'success' => true,

@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../config/Db.php';
+require_once __DIR__ . '/../config/db.php';
 
 class Comment
 {
@@ -23,7 +23,7 @@ class Comment
         if (strlen(trim($comment)) < 2) {
             throw new Exception("Comment te kort");
         }
-        $this->comment = $comment;
+        $this->comment = trim($comment);
     }
 
     public function setRating(int $rating): void
@@ -34,36 +34,32 @@ class Comment
         $this->rating = $rating;
     }
 
-
-    public function save(): bool
+    public function add(): bool
     {
         $conn = Db::getConnection();
-
         $stmt = $conn->prepare("
             INSERT INTO comments (user_id, product_id, comment, rating)
-            VALUES (:user_id, :product_id, :comment, :rating)
+            VALUES (:uid, :pid, :comment, :rating)
         ");
-
         return $stmt->execute([
-            ':user_id' => $this->userId,
-            ':product_id' => $this->productId,
+            ':uid' => $this->userId,
+            ':pid' => $this->productId,
             ':comment' => $this->comment,
             ':rating' => $this->rating
         ]);
     }
 
- 
     public static function getByProduct(int $productId): array
     {
         $conn = Db::getConnection();
         $stmt = $conn->prepare("
-            SELECT * FROM comments 
-            WHERE product_id = :product_id 
-            ORDER BY created_at DESC
+            SELECT c.*, u.email
+            FROM comments c
+            JOIN users u ON u.id = c.user_id
+            WHERE c.product_id = :pid
+            ORDER BY c.created_at DESC
         ");
-        $stmt->bindValue(':product_id', $productId);
-        $stmt->execute();
-
+        $stmt->execute([":pid" => $productId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

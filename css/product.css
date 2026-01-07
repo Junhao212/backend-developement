@@ -1,0 +1,274 @@
+* { 
+    box-sizing: border-box; 
+  }
+  
+  html, body { 
+    margin: 0; 
+    padding: 0; 
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    color: #333;
+    background: #f5f5f5;
+    padding: 30px 20px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  /* Terug link */
+  p a[href*="index.php"] {
+    display: inline-block;
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    margin-bottom: 20px;
+    padding: 8px 0;
+    font-weight: bold;
+  }
+  
+  p a[href*="index.php"]:hover {
+    color: #555;
+    text-decoration: underline;
+  }
+  
+  /* Product titel */
+  h1 {
+    font-size: 32px;
+    font-weight: bold;
+    color: #222;
+    margin: 0 0 20px 0;
+  }
+  
+  /* Product info */
+  p {
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 10px 0;
+  }
+  
+  p strong {
+    font-weight: bold;
+    color: #222;
+  }
+  
+  /* Product afbeelding */
+  img {
+    max-width: 300px;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin: 20px 0;
+    display: block;
+  }
+  
+  /* Horizontale lijn */
+  hr {
+    border: none;
+    border-top: 2px solid #ddd;
+    margin: 30px 0;
+  }
+  
+  /* Forms */
+  form {
+    margin: 20px 0;
+  }
+  
+  form input[type="hidden"] {
+    display: none;
+  }
+  
+  form input[type="number"] {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 150px;
+    margin-right: 10px;
+  }
+  
+  form input[type="number"]:focus {
+    outline: none;
+    border-color: #333;
+  }
+  
+  form textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    resize: vertical;
+  }
+  
+  form textarea:focus {
+    outline: none;
+    border-color: #333;
+  }
+  
+  /* Buttons */
+  button {
+    padding: 10px 20px;
+    background: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background 0.2s;
+  }
+  
+  button:hover {
+    background: #555;
+  }
+  
+  button[type="submit"] {
+    margin-top: 10px;
+  }
+  
+  /* Links */
+  a {
+    color: #333;
+    text-decoration: underline;
+    font-size: 15px;
+  }
+  
+  a:hover {
+    color: #000;
+  }
+  
+  /* Winkelmandje link */
+  p a[href*="cart.php"] {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #fff;
+    border: 2px solid #333;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    margin-top: 10px;
+    transition: all 0.2s;
+  }
+  
+  p a[href*="cart.php"]:hover {
+    background: #333;
+    color: #fff;
+  }
+  
+  /* Login link */
+  p a[href*="login.php"] {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #333;
+    color: #fff;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.2s;
+  }
+  
+  p a[href*="login.php"]:hover {
+    background: #555;
+  }
+  
+  /* Section headings */
+  h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #222;
+    margin: 30px 0 20px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ddd;
+  }
+  
+  h3 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #222;
+    margin: 25px 0 15px 0;
+  }
+  
+  /* Comments sectie */
+  div[style*="border"] {
+    background: #fff !important;
+    border: 1px solid #ddd !important;
+    border-radius: 8px !important;
+    padding: 15px !important;
+    margin-bottom: 15px !important;
+  }
+  
+  div[style*="border"] strong {
+    font-size: 16px;
+    color: #222;
+  }
+  
+  div[style*="border"] small {
+    color: #666;
+    font-size: 13px;
+  }
+  
+  /* Comment form */
+  #commentForm {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-top: 20px;
+  }
+  
+  #commentForm textarea {
+    margin-bottom: 15px;
+  }
+  
+  /* Comment bericht */
+  #commentMsg {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 4px;
+    font-weight: bold;
+  }
+  
+  #commentMsg:not(:empty) {
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+  }
+  
+  /* Geen comments bericht */
+  p:has-text("Nog geen comments") {
+    padding: 20px;
+    background: #fff;
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    text-align: center;
+    color: #666;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    body {
+      padding: 20px 15px;
+    }
+    
+    h1 {
+      font-size: 26px;
+    }
+    
+    h2 {
+      font-size: 20px;
+    }
+    
+    img {
+      max-width: 100%;
+    }
+    
+    form input[type="number"] {
+      width: 100%;
+      margin-right: 0;
+      margin-bottom: 10px;
+    }
+  }
+  

@@ -1,19 +1,19 @@
 <?php
-require_once __DIR__ . '/../config/Db.php';
+require_once __DIR__ . '/../config/db.php';
 
 class Product
 {
     private string $title;
     private float $price;
-    private string $category;
-    private string $image;
+    private string $category = '';
+    private string $image = '';
 
     public function setTitle(string $title): void
     {
         if (strlen(trim($title)) < 2) {
             throw new Exception("Titel te kort");
         }
-        $this->title = $title;
+        $this->title = trim($title);
     }
 
     public function setPrice(float $price): void
@@ -26,12 +26,12 @@ class Product
 
     public function setCategory(string $category): void
     {
-        $this->category = $category;
+        $this->category = trim($category);
     }
 
     public function setImage(string $image): void
     {
-        $this->image = $image;
+        $this->image = trim($image);
     }
 
     public function add(): bool
@@ -50,22 +50,48 @@ class Product
         ]);
     }
 
-    public static function getAll(): array
+    public static function getAll(string $category = '', string $search = ''): array
     {
         $conn = Db::getConnection();
-        $stmt = $conn->prepare("SELECT * FROM products ORDER BY created_at DESC");
-        $stmt->execute();
+
+        $sql = "SELECT * FROM products WHERE 1=1";
+        $params = [];
+
+        if ($category !== '') {
+            $sql .= " AND category = :category";
+            $params[':category'] = $category;
+        }
+
+        if ($search !== '') {
+            $sql .= " AND title LIKE :q";
+            $params[':q'] = '%' . $search . '%';
+        }
+
+        $sql .= " ORDER BY created_at DESC";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute($params);
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function getCategories(): array
+    {
+        $conn = Db::getConnection();
+        $stmt = $conn->prepare("SELECT DISTINCT category FROM products WHERE category <> '' ORDER BY category ASC");
+        $stmt->execute();
+
+        return array_map(fn($row) => $row['category'], $stmt->fetchAll(PDO::FETCH_ASSOC));
     }
 
     public static function findById(int $id): ?array
     {
         $conn = Db::getConnection();
         $stmt = $conn->prepare("SELECT * FROM products WHERE id = :id");
-        $stmt->bindValue(":id", $id, PDO::PARAM_INT);
-        $stmt->execute();
-        $product = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $product ?: null;
+        $stmt->execute([':id' => $id]);
+        $p = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $p ?: null;
     }
 
     public function update(int $id): bool

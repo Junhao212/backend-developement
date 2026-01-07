@@ -1,0 +1,134 @@
+* { 
+    box-sizing: border-box; 
+  }
+  
+  html, body { 
+    margin: 0; 
+    padding: 0; 
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    color: #333;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  
+  /* Container */
+  .container {
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+  }
+  
+  .container.small {
+    max-width: 400px;
+  }
+  
+  /* Heading */
+  h2 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #222;
+    margin: 0 0 25px 0;
+    text-align: center;
+  }
+  
+  /* Notice/Message */
+  p.notice,
+  body > p {
+    padding: 12px 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    color: #856404;
+    text-align: center;
+    font-size: 14px;
+  }
+  
+  /* Form box */
+  .box,
+  form:not(.box) {
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+  
+  /* Form inputs */
+  form input[type="email"],
+  form input[type="password"],
+  form input[type="text"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 15px;
+    margin-bottom: 15px;
+    transition: border-color 0.2s;
+  }
+  
+  form input[type="email"]:focus,
+  form input[type="password"]:focus,
+  form input[type="text"]:focus {
+    outline: none;
+    border-color: #333;
+  }
+  
+  form input::placeholder {
+    color: #999;
+  }
+  
+  /* Button */
+  button[type="submit"] {
+    width: 100%;
+    padding: 12px 20px;
+    background: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    transition: background 0.2s;
+    margin-top: 5px;
+  }
+  
+  button[type="submit"]:hover {
+    background: #555;
+  }
+  
+  /* Links */
+  a {
+    color: #333;
+    text-decoration: underline;
+    font-weight: bold;
+  }
+  
+  a:hover {
+    color: #000;
+  }
+  
+  /* Text onder form */
+  p {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .muted {
+    color: #666;
+  }
+  
+  form p.muted {
+    margin-top: 15px;
+    margin-bottom: 0;
+    font-size: 14px;
+  }

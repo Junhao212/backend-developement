@@ -1,113 +1,101 @@
 <?php
 session_start();
-require_once __DIR__ . '/classes/product.php';
+require_once __DIR__ . '/classes/Product.php';
 
-$products = Product::getAll();
+$category = $_GET['category'] ?? '';
+$search = $_GET['q'] ?? '';
+
+$categories = Product::getCategories();
+$products = Product::getAll($category, $search);
 
 $isLoggedIn = isset($_SESSION['user_id']);
 $isAdmin = $isLoggedIn && (($_SESSION['role'] ?? '') === 'admin');
-$coins = (int)($_SESSION['currency'] ?? 0);
 ?>
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>JW Shop</title>
-  <link rel="stylesheet" href="css/indexroot.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/shop.css">
 </head>
 <body>
 
-<header class="navbar">
-  <div class="nav-left">
-    <a class="logo" href="index.php">JW<span>™</span></a>
-
-    <nav class="nav-links">
-      <a href="#">NEW IN</a>
-      <a href="#">MEN</a>
-      <a href="#">WOMEN</a>
-      <a href="#">EYEWEAR</a>
-      <a href="#">SNEAKERS</a>
-      <a href="#">KIDS</a>
-      <a href="#">BRAND</a>
-    </nav>
-  </div>
-
-  <div class="nav-right">
-    <span class="icon" title="Zoeken">🔍</span>
-    <span class="icon" title="Favorieten">♡</span>
-    <span class="icon" title="Winkelmand">🛒</span>
-
-    <?php if ($isLoggedIn): ?>
-      <div class="pill">Coins: <strong><?= $coins ?></strong></div>
-
-      <?php if ($isAdmin): ?>
-        <a class="btn btn-outline" href="admin/products.php">Admin</a>
-        <a class="btn btn-primary" href="admin/product_add.php">+ Nieuw product</a>
-      <?php endif; ?>
-
-      <a class="btn btn-ghost" href="authentication/logout.php">Logout</a>
-    <?php else: ?>
-      <a class="btn btn-outline" href="authentication/login.php">Login</a>
-      <a class="btn btn-primary" href="authentication/register.php">Register</a>
-    <?php endif; ?>
-  </div>
-</header>
-
-<section class="hero">
-  <div class="hero-inner">
-    <h1>JW Shop</h1>
-    <p>Minimal fashion. Max impact.</p>
-    <a class="btn btn-primary" href="#products">Shop sale</a>
-  </div>
-</section>
-
-<main class="container">
-  <div class="section-head" id="products">
-    <h2>SHOP SALE</h2>
-    <p class="muted">Producten uit je database.</p>
-  </div>
-
-  <?php if (empty($products)): ?>
-    <div class="empty">
-      <h3>Geen producten gevonden</h3>
-      <p class="muted">Maak eerst een product aan via de admin.</p>
-
-      <?php if ($isAdmin): ?>
-        <a class="btn btn-primary" href="admin/product_add.php">+ Maak je eerste product</a>
+<div class="nav">
+  <div class="container">
+    <div class="brand"><a href="index.php">JW Shop</a></div>
+    <div>
+      <?php if ($isLoggedIn): ?>
+        <span class="badge">Coins: <?= (int)($_SESSION['currency'] ?? 0) ?></span>
+        <?php if ($isAdmin): ?>
+          <a href="admin/products.php">Admin</a>
+        <?php endif; ?>
+        <a href="products/cart.php">Winkelmandje</a>
+        <a href="authentication/logout.php">Logout</a>
       <?php else: ?>
-        <p class="muted">Log in als admin om producten toe te voegen.</p>
+        <a href="authentication/login.php">Login</a>
+        <a href="authentication/register.php">Register</a>
       <?php endif; ?>
     </div>
-  <?php else: ?>
-    <section class="grid">
-      <?php foreach ($products as $p): ?>
-        <article class="card">
-          <a class="card-link" href="products/product.php?id=<?= (int)$p['id'] ?>">
-            <div class="card-img">
-              <?php if (!empty($p['image'])): ?>
-                <!-- als jij uploads gebruikt: zet images in /uploads -->
-                <img src="uploads/<?= htmlspecialchars($p['image']) ?>" alt="<?= htmlspecialchars($p['title']) ?>">
-              <?php else: ?>
-                <div class="img-placeholder">JW</div>
-              <?php endif; ?>
-            </div>
+  </div>
+</div>
 
-            <div class="card-body">
-              <h3><?= htmlspecialchars($p['title']) ?></h3>
-              <p class="muted"><?= htmlspecialchars($p['category'] ?? '') ?></p>
-              <div class="price">€<?= number_format((float)$p['price'], 2, ',', '.') ?></div>
-            </div>
-          </a>
-        </article>
-      <?php endforeach; ?>
-    </section>
+<div class="container">
+  <?php if (!empty($_SESSION['flash'])): ?>
+    <div class="notice ok"><?= htmlspecialchars($_SESSION['flash']); unset($_SESSION['flash']); ?></div>
   <?php endif; ?>
-</main>
 
-<footer class="footer">
-  <p>© <?= date('Y') ?> JW Shop</p>
-</footer>
+  <div class="card">
+    <form method="GET" style="display:flex; gap:10px; flex-wrap:wrap; align-items:end;">
+      <div>
+        <label>Categorie</label><br>
+        <select name="category">
+          <option value="">Alle</option>
+          <?php foreach ($categories as $c): ?>
+            <option value="<?= htmlspecialchars($c) ?>" <?= $c === $category ? 'selected' : '' ?>>
+              <?= htmlspecialchars($c) ?>
+            </option>
+          <?php endforeach; ?>
+        </select>
+      </div>
+
+      <div>
+        <label>Zoeken</label><br>
+        <input type="text" name="q" value="<?= htmlspecialchars($search) ?>" placeholder="Zoek product...">
+      </div>
+
+      <button class="btn" type="submit">Filter</button>
+      <a class="btn" href="index.php">Reset</a>
+    </form>
+  </div>
+
+  <h2>Producten</h2>
+
+  <?php if (empty($products)): ?>
+    <div class="notice">Geen producten gevonden.</div>
+  <?php else: ?>
+    <div class="grid">
+      <?php foreach ($products as $p): ?>
+        <div class="product">
+          <h3><?= htmlspecialchars($p['title']) ?></h3>
+          <div class="meta"><?= htmlspecialchars($p['category'] ?? '') ?></div>
+          <div class="price">€<?= number_format((float)$p['price'], 2, ',', '.') ?></div>
+
+          <a href="products/product.php?id=<?= (int)$p['id'] ?>">Bekijk</a>
+
+          <?php if ($isLoggedIn): ?>
+            <form method="POST" action="products/add_to_cart.php" style="margin-top:8px;">
+              <input type="hidden" name="product_id" value="<?= (int)$p['id'] ?>">
+              <button class="btn" type="submit">+ In winkelmandje</button>
+            </form>
+          <?php else: ?>
+            <div class="meta" style="margin-top:8px;">Log in om te kopen</div>
+          <?php endif; ?>
+        </div>
+      <?php endforeach; ?>
+    </div>
+  <?php endif; ?>
+</div>
 
 </body>
 </html>
