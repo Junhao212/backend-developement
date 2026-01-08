@@ -68,7 +68,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
 <?php endif; ?>
 
 <?php if ($isLoggedIn): ?>
-    <h3>Schrijf een comment (AJAX)</h3>
+    <h3>Schrijf een comment</h3>
     <form id="commentForm">
         <input type="hidden" name="product_id" value="<?= (int)$product['id'] ?>">
         <textarea name="comment" rows="3" placeholder="Jouw comment..." required></textarea><br><br>
