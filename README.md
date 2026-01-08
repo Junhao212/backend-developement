@@ -51,4 +51,4 @@ project volledig aan de vereisten.
 
 ## 🎥 Demo Video (unlisted)
 **Video link:**  
-<PLAK HIER JE YOUTUBE / VIMEO LINK>
+<https://youtu.be/jE-LIJ2cN4o>
