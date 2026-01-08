@@ -38,7 +38,7 @@ Repository staat **PUBLIC** en bevat geen credentials.
 ---
 
 ## 🧠 Zelfreflectie
-**Score:** 17 / 20
+**Score:** 14 / 20
 
 **Waarom:**  
 Als klant ben ik tevreden over de functionaliteit en stabiliteit van de webshop.
